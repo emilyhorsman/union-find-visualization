@@ -31,11 +31,11 @@ class WeightedQuickUnionUF {
 		}
 
 		if (this.sz[i] < this.sz[j]) {
-			this.edges.update({ id: i, from: i, to: j });
+			this.edges.update({ id: i, from: i, to: j, prev: this.edges.get(i).to });
 			this.id[i] = j;
 			this.sz[j] += this.sz[i];
 		} else {
-			this.edges.update({ id: j, from: j, to: i });
+			this.edges.update({ id: j, from: j, to: i, prev: this.edges.get(i).to });
 			this.id[j] = i;
 			this.sz[i] += this.sz[j];
 		}
@@ -62,14 +62,35 @@ const container = document.querySelector('.app');
 const network = new Network(container, data, options);
 
 
-uf.union(4, 3);
-uf.union(3, 8);
-uf.union(6, 5);
-uf.union(9, 4);
-uf.union(2, 1);
-uf.union(8, 9);
-uf.union(5, 0);
-uf.union(7, 2);
-uf.union(6, 1);
-uf.union(1, 0);
-uf.union(6, 7);
+import unions from './tinyUF.txt'
+const lines = unions.split("\n").slice(1)
+	.map(line => {
+		const parts = line.split(" ");
+		const p = parseInt(parts[0]);
+		const q = parseInt(parts[1]);
+		return { p, q };
+	});
+let i = 0;
+
+
+function stepForward() {
+	if (i >= lines.length) {
+		return;
+	}
+
+	uf.union(lines[i].p, lines[i].q);
+	i++;
+}
+
+
+function stepBackward() {
+	if (i <= 0) {
+		return;
+	}
+
+	i--;
+}
+
+
+document.querySelector('.js-step-forward').addEventListener('click', stepForward);
+document.querySelector('.js-step-backward').addEventListener('click', stepBackward);

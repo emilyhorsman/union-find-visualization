@@ -18,6 +18,12 @@ const config = {
 				test: /\.jsx?$/,
 				use: 'babel-loader',
 				exclude: /node_modules/
+			},
+
+			{
+				test: /\.txt$/,
+				use: 'raw-loader',
+				exclude: /node_modules/
 			}
 		]
 	}
